@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Cadastro de Veículos</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Sistema de Cadastro de Veículos</h1>
+        </header>
+
+        <!-- Formulário de Cadastro/Edição -->
+        <section class="form-section">
+            <h2 id="form-title">Cadastrar Novo Veículo</h2>
+            <form id="vehicle-form">
+                <input type="hidden" id="edit-id" value="">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="placa">Placa *</label>
+                        <input type="text" id="placa" name="placa" required maxlength="8" placeholder="ABC-1234">
+                    </div>
+                    <div class="form-group">
+                        <label for="modelo">Modelo *</label>
+                        <input type="text" id="modelo" name="modelo" required placeholder="Ex: Civic">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="marca">Marca *</label>
+                        <input type="text" id="marca" name="marca" required placeholder="Ex: Honda">
+                    </div>
+                    <div class="form-group">
+                        <label for="ano">Ano de Fabricação *</label>
+                        <input type="number" id="ano" name="ano" required min="1900" max="2030" placeholder="2023">
+                    </div>
+                </div>
+                <div class="form-buttons">
+                    <button type="submit" id="submit-btn">Cadastrar</button>
+                    <button type="button" id="cancel-btn" style="display: none;">Cancelar</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Busca -->
+        <section class="search-section">
+            <h2>Buscar Veículos</h2>
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="Digite placa, modelo ou marca...">
+                <button type="button" id="search-btn">Buscar</button>
+                <button type="button" id="clear-search-btn">Limpar</button>
+            </div>
+        </section>
+
+        <!-- Lista de Veículos -->
+        <section class="vehicles-section">
+            <h2>Veículos Cadastrados</h2>
+            <div class="vehicles-info">
+                <span id="vehicles-count">0 veículos cadastrados</span>
+            </div>
+            <div class="vehicles-table-container">
+                <table id="vehicles-table">
+                    <thead>
+                        <tr>
+                            <th>Placa</th>
+                            <th>Modelo</th>
+                            <th>Marca</th>
+                            <th>Ano</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="vehicles-tbody">
+                        <!-- Veículos serão inseridos aqui dinamicamente -->
+                    </tbody>
+                </table>
+            </div>
+            <div id="no-vehicles" class="no-vehicles">
+                <p>Nenhum veículo cadastrado ainda.</p>
+                <p>Comece cadastrando um veículo usando o formulário acima.</p>
+            </div>
+        </section>
+    </div>
+
+    <!-- Modal de Confirmação -->
+    <div id="confirm-modal" class="modal">
+        <div class="modal-content">
+            <h3>Confirmar Exclusão</h3>
+            <p id="confirm-message">Tem certeza que deseja excluir este veículo?</p>
+            <div class="modal-buttons">
+                <button id="confirm-yes">Sim, Excluir</button>
+                <button id="confirm-no">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast de Notificação -->
+    <div id="toast" class="toast"></div>
+
+    <script src="script.js"></script>
+</body>
+</html> 
