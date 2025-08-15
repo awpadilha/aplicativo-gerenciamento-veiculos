@@ -1,161 +1,137 @@
-# 🚗 Sistema de Cadastro de Veículos
+# 🚗 Sistema de Gerenciamento de Veículos
 
-Uma aplicação web completa para gerenciamento de cadastro de veículos, desenvolvida com HTML, CSS e JavaScript puro.
+Um sistema completo para cadastro, edição e gerenciamento de veículos com sistema de autenticação integrado.
 
 ## ✨ Funcionalidades
 
-### ✅ Requisitos Implementados
+### 🔐 Sistema de Autenticação
+- **Login seguro** com e-mail e senha
+- **Controle de sessão** persistente
+- **Proteção de rotas** - acesso restrito a usuários autenticados
+- **Logout** com limpeza de sessão
 
-- **R1 - Cadastro de veículo**: Formulário completo para cadastrar veículos com placa, modelo, marca e ano
-- **R2 - Validação de placa**: Sistema verifica se a placa já está cadastrada antes de salvar
-- **R3 - Edição de veículo**: Interface para editar informações de veículos existentes
-- **R4 - Exclusão de veículo**: Funcionalidade para remover veículos com confirmação
-- **R5 - Consulta de veículo**: Busca por placa, modelo ou marca
-- **R6 - Listagem de veículos**: Tabela com todos os veículos cadastrados
+### 🚙 Gerenciamento de Veículos
+- **Cadastro** de novos veículos
+- **Edição** de veículos existentes
+- **Exclusão** com confirmação
+- **Busca** por placa, modelo ou marca
+- **Validação** de dados (placa brasileira, ano, etc.)
+- **Armazenamento local** persistente
 
-### 🎯 Características Adicionais
-
-- **Interface moderna e responsiva**: Design adaptável para diferentes tamanhos de tela
-- **Validações robustas**: Verificação de formato de placa, ano válido e campos obrigatórios
-- **Armazenamento local**: Dados salvos no localStorage do navegador
-- **Busca em tempo real**: Filtragem automática durante a digitação
-- **Notificações toast**: Feedback visual para todas as operações
-- **Modal de confirmação**: Confirmação antes de excluir veículos
-- **Dados de exemplo**: Aplicação vem com alguns veículos pré-cadastrados
+### 🎨 Interface
+- **Design responsivo** para desktop e mobile
+- **Interface moderna** com gradientes e sombras
+- **Notificações toast** para feedback do usuário
+- **Modais de confirmação** para ações críticas
 
 ## 🚀 Como Usar
 
-### 1. Abrir a Aplicação
-- Abra o arquivo `index.html` em qualquer navegador moderno
-- A aplicação funcionará completamente offline
+### 1. Acesso ao Sistema
+- Abra o arquivo `index.html` em seu navegador
+- Use as credenciais padrão:
+  - **E-mail:** `teste@teste.com`
+  - **Senha:** `123456`
 
-### 2. Cadastrar Veículo
-- Preencha o formulário com:
-  - **Placa**: Formato ABC-1234 ou ABC1234
-  - **Modelo**: Nome do modelo do veículo
-  - **Marca**: Fabricante do veículo
-  - **Ano**: Ano de fabricação (1900-2031)
-- Clique em "Cadastrar"
+### 2. Gerenciando Veículos
+- **Cadastrar:** Preencha o formulário e clique em "Cadastrar"
+- **Editar:** Clique no botão "✏️ Editar" na lista
+- **Excluir:** Clique no botão "🗑️ Excluir" e confirme
+- **Buscar:** Use o campo de busca para encontrar veículos específicos
 
-### 3. Editar Veículo
-- Na tabela de veículos, clique no botão "✏️ Editar"
-- O formulário será preenchido com os dados atuais
-- Faça as alterações e clique em "Atualizar"
-- Use "Cancelar" para desistir da edição
-
-### 4. Excluir Veículo
-- Na tabela de veículos, clique no botão "🗑️ Excluir"
-- Confirme a exclusão no modal que aparecerá
-
-### 5. Buscar Veículos
-- Use o campo de busca para encontrar veículos por:
-  - Placa
-  - Modelo
-  - Marca
-- Clique em "Buscar" ou digite para busca automática
-- Use "Limpar" para remover os filtros
+### 3. Sair do Sistema
+- Clique no botão "Sair" no canto superior direito
 
 ## 🛠️ Tecnologias Utilizadas
 
-- **HTML5**: Estrutura semântica da aplicação
-- **CSS3**: Estilos modernos com gradientes, sombras e animações
-- **JavaScript ES6+**: Lógica da aplicação com classes e funcionalidades modernas
-- **LocalStorage**: Armazenamento local dos dados
-- **CSS Grid/Flexbox**: Layout responsivo e flexível
+- **HTML5** - Estrutura semântica
+- **CSS3** - Estilos modernos com Flexbox e Grid
+- **JavaScript ES6+** - Lógica da aplicação
+- **LocalStorage** - Armazenamento local dos dados
+- **Design Responsivo** - Funciona em todos os dispositivos
 
 ## 📱 Responsividade
 
-A aplicação é totalmente responsiva e funciona bem em:
-- Desktop (1200px+)
-- Tablet (768px - 1199px)
-- Mobile (até 767px)
+O sistema é totalmente responsivo e funciona perfeitamente em:
+- 📱 Dispositivos móveis
+- 💻 Tablets
+- 🖥️ Desktops
 
-## 🔒 Validações
+## 🔒 Segurança
 
-### Placa
-- Formato: ABC-1234 ou ABC1234
-- Deve ser única no sistema
-- Aceita letras maiúsculas e números
+- **Autenticação obrigatória** para acesso ao sistema
+- **Validação de credenciais** no lado cliente
+- **Sessão persistente** com localStorage
+- **Proteção de rotas** implementada
 
-### Ano
-- Deve estar entre 1900 e o ano atual + 1
-- Validação de entrada numérica
-
-### Campos Obrigatórios
-- Placa, modelo e marca são obrigatórios
-- Validação em tempo real
-
-## 💾 Armazenamento
-
-- **LocalStorage**: Dados persistem entre sessões do navegador
-- **Estrutura**: Array de objetos JSON
-- **Backup**: Os dados são salvos automaticamente após cada operação
-
-## 🎨 Interface
-
-### Cores
-- **Primária**: Gradiente azul-roxo (#667eea → #764ba2)
-- **Sucesso**: Verde (#48bb78)
-- **Erro**: Vermelho (#e53e3e)
-- **Aviso**: Laranja (#ed8936)
-- **Info**: Azul (#4299e1)
-
-### Componentes
-- **Formulários**: Campos com validação visual
-- **Tabelas**: Responsivas com hover effects
-- **Botões**: Com animações e estados hover
-- **Modais**: Para confirmações importantes
-- **Toasts**: Notificações temporárias
-
-## 📁 Estrutura de Arquivos
+## 📁 Estrutura do Projeto
 
 ```
-sistema-veiculos/
-├── index.html          # Página principal
-├── styles.css          # Estilos da aplicação
-├── script.js           # Lógica JavaScript
-└── README.md           # Este arquivo
+aplicativo-gerenciamento-veiculos/
+├── index.html          # Página principal com login e sistema
+├── styles.css          # Estilos CSS responsivos
+├── script.js           # Lógica JavaScript (auth + veículos)
+└── README.md           # Documentação do projeto
 ```
 
-## 🌟 Recursos Avançados
+## 🎯 Funcionalidades Técnicas
 
-- **Padrão MVC**: Separação clara entre dados, lógica e interface
-- **Event Delegation**: Gerenciamento eficiente de eventos
-- **Formatação automática**: Placas são formatadas automaticamente
-- **Persistência de dados**: Informações não são perdidas ao fechar o navegador
-- **Feedback visual**: Confirmações visuais para todas as operações
+### Sistema de Autenticação
+- Classe `AuthSystem` para gerenciar login/logout
+- Validação de credenciais
+- Controle de estado de autenticação
+- Redirecionamento automático
+
+### Gerenciamento de Veículos
+- Classe `VehicleManager` para operações CRUD
+- Validação de dados (placa, ano, etc.)
+- Busca e filtros
+- Persistência local
+
+### Interface do Usuário
+- Componentes modulares
+- Estados visuais (loading, success, error)
+- Feedback visual para todas as ações
+- Design consistente e moderno
 
 ## 🔧 Personalização
 
-### Alterar Cores
-Edite as variáveis CSS no arquivo `styles.css`:
-```css
-:root {
-    --primary-color: #667eea;
-    --secondary-color: #764ba2;
-    --success-color: #48bb78;
-    --error-color: #e53e3e;
+### Alterar Credenciais de Login
+Para alterar as credenciais padrão, edite o método `validateCredentials` no arquivo `script.js`:
+
+```javascript
+validateCredentials(email, password) {
+    // Altere aqui as credenciais desejadas
+    return email === 'seu@email.com' && password === 'suasenha';
 }
 ```
 
-### Adicionar Campos
-Para adicionar novos campos ao veículo:
-1. Adicione o campo no HTML
-2. Atualize a classe `VehicleManager` no JavaScript
-3. Modifique as validações conforme necessário
+### Adicionar Novos Campos
+Para adicionar novos campos aos veículos, edite:
+- Formulário HTML em `index.html`
+- Validação em `script.js`
+- Renderização na tabela
 
-## 📝 Licença
+## 🚨 Limitações Atuais
 
-Este projeto é de código aberto e pode ser usado livremente para fins educacionais e comerciais.
+- **Credenciais fixas** (para demonstração)
+- **Armazenamento local** (sem banco de dados)
+- **Sem recuperação de senha**
+- **Sem múltiplos usuários**
 
-## 🤝 Contribuições
+## 🔮 Próximas Melhorias
 
-Sugestões e melhorias são sempre bem-vindas! Sinta-se à vontade para:
-- Reportar bugs
-- Sugerir novas funcionalidades
-- Enviar pull requests
-- Melhorar a documentação
+- [ ] Sistema de usuários múltiplos
+- [ ] Recuperação de senha
+- [ ] Banco de dados backend
+- [ ] API REST
+- [ ] Upload de imagens dos veículos
+- [ ] Relatórios e estatísticas
+- [ ] Exportação de dados
+
+## 📄 Licença
+
+Este projeto é de uso livre para fins educacionais e comerciais.
 
 ---
 
-**Desenvolvido com ❤️ usando tecnologias web modernas** 
+**Desenvolvido com ❤️ para gerenciamento eficiente de frotas de veículos** 

@@ -7,9 +7,45 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
+    <!-- Tela de Login -->
+    <div id="login-screen" class="login-container">
+        <div class="login-box">
+            <div class="login-header">
+                <h1>🚗 Sistema de Veículos</h1>
+                <p>Faça login para acessar o sistema</p>
+            </div>
+            
+            <form id="login-form" class="login-form">
+                <div class="form-group">
+                    <label for="email">E-mail</label>
+                    <input type="email" id="email" name="email" required placeholder="Digite seu e-mail">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Senha</label>
+                    <input type="password" id="password" name="password" required placeholder="Digite sua senha">
+                </div>
+                
+                <button type="submit" class="login-btn">Entrar</button>
+            </form>
+            
+            <div class="login-footer">
+                <p>Usuário padrão: teste@teste.com</p>
+                <p>Senha: 123456</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sistema Principal (inicialmente oculto) -->
+    <div id="main-system" class="container" style="display: none;">
         <header>
-            <h1>Sistema de Cadastro de Veículos</h1>
+            <div class="header-content">
+                <h1>🚗 Sistema de Cadastro de Veículos</h1>
+                <div class="user-info">
+                    <span id="user-email"></span>
+                    <button id="logout-btn" class="logout-btn">Sair</button>
+                </div>
+            </div>
         </header>
 
         <!-- Formulário de Cadastro/Edição -->
@@ -46,7 +82,7 @@
 
         <!-- Busca -->
         <section class="search-section">
-            <h2>Buscar Veículos</h2>
+            <h2>🔍 Buscar Veículos</h2>
             <div class="search-container">
                 <input type="text" id="search-input" placeholder="Digite placa, modelo ou marca...">
                 <button type="button" id="search-btn">Buscar</button>
@@ -56,7 +92,7 @@
 
         <!-- Lista de Veículos -->
         <section class="vehicles-section">
-            <h2>Veículos Cadastrados</h2>
+            <h2>📋 Veículos Cadastrados</h2>
             <div class="vehicles-info">
                 <span id="vehicles-count">0 veículos cadastrados</span>
             </div>

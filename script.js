@@ -1,4 +1,130 @@
-// Classe principal da aplicação
+// Sistema de Autenticação
+class AuthSystem {
+    constructor() {
+        this.isAuthenticated = false;
+        this.currentUser = null;
+        this.init();
+    }
+
+    init() {
+        this.checkAuthStatus();
+        this.bindLoginEvents();
+        this.bindLogoutEvent(); // Adicionar evento de logout aqui
+    }
+
+    // Verificar status de autenticação
+    checkAuthStatus() {
+        const user = localStorage.getItem('currentUser');
+        if (user) {
+            this.currentUser = JSON.parse(user);
+            this.isAuthenticated = true;
+            this.showMainSystem();
+        } else {
+            this.showLoginScreen();
+        }
+    }
+
+    // Vincular eventos de login
+    bindLoginEvents() {
+        document.getElementById('login-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            this.handleLogin();
+        });
+    }
+
+    // Vincular evento de logout
+    bindLogoutEvent() {
+        const logoutBtn = document.getElementById('logout-btn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', () => {
+                this.logout();
+            });
+        }
+    }
+
+    // Manipular login
+    handleLogin() {
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+
+        if (this.validateCredentials(email, password)) {
+            this.login(email);
+        } else {
+            this.showToast('E-mail ou senha incorretos!', 'error');
+        }
+    }
+
+    // Validar credenciais
+    validateCredentials(email, password) {
+        // Credenciais fixas para demonstração
+        return email === 'teste@teste.com' && password === '123456';
+    }
+
+    // Realizar login
+    login(email) {
+        this.currentUser = { email };
+        this.isAuthenticated = true;
+        
+        // Salvar no localStorage
+        localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+        
+        // Mostrar sistema principal
+        this.showMainSystem();
+        
+        this.showToast('Login realizado com sucesso!', 'success');
+    }
+
+    // Realizar logout
+    logout() {
+        this.isAuthenticated = false;
+        this.currentUser = null;
+        
+        // Limpar localStorage
+        localStorage.removeItem('currentUser');
+        
+        // Mostrar tela de login
+        this.showLoginScreen();
+        
+        this.showToast('Logout realizado com sucesso!', 'info');
+    }
+
+    // Mostrar tela de login
+    showLoginScreen() {
+        document.getElementById('login-screen').style.display = 'flex';
+        document.getElementById('main-system').style.display = 'none';
+        
+        // Limpar formulário
+        document.getElementById('login-form').reset();
+    }
+
+    // Mostrar sistema principal
+    showMainSystem() {
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('main-system').style.display = 'block';
+        
+        // Atualizar informações do usuário
+        document.getElementById('user-email').textContent = this.currentUser.email;
+        
+        // Inicializar sistema de veículos
+        if (!window.vehicleManager) {
+            window.vehicleManager = new VehicleManager();
+        }
+    }
+
+    // Mostrar toast
+    showToast(message, type = 'info') {
+        const toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.className = `toast ${type}`;
+        toast.classList.add('show');
+        
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 4000);
+    }
+}
+
+// Classe principal da aplicação de veículos
 class VehicleManager {
     constructor() {
         this.vehicles = [];
@@ -294,10 +420,10 @@ class VehicleManager {
                     <td>${vehicle.ano}</td>
                     <td class="actions">
                         <button class="btn-edit" onclick="vehicleManager.editVehicle('${vehicle.id}')">
-                            Editar
+                            ✏️ Editar
                         </button>
                         <button class="btn-delete" onclick="vehicleManager.showDeleteConfirmation('${vehicle.id}', '${this.formatPlaca(vehicle.placa)}')">
-                            Excluir
+                            🗑️ Excluir
                         </button>
                     </td>
                 </tr>
@@ -338,30 +464,59 @@ class VehicleManager {
 }
 
 // Inicializar aplicação quando a página carregar
+let authSystem;
 let vehicleManager;
 
+// Funções globais para uso nos botões HTML
+function editVehicle(id) {
+    if (vehicleManager) {
+        vehicleManager.editVehicle(id);
+    }
+}
+
+function deleteVehicle(id) {
+    if (vehicleManager) {
+        vehicleManager.showDeleteConfirmation(id);
+    }
+}
+
+// Configuração global adicional para o botão de logout
+function setupLogoutButton() {
+    const logoutBtn = document.getElementById('logout-btn');
+    if (logoutBtn && window.authSystem) {
+        logoutBtn.addEventListener('click', () => {
+            window.authSystem.logout();
+        });
+    }
+}
+
+// Configurar botão de logout quando a página carregar
 document.addEventListener('DOMContentLoaded', () => {
-    vehicleManager = new VehicleManager();
+    // Inicializar sistema de autenticação
+    authSystem = new AuthSystem();
+    
+    // Configurar botão de logout globalmente
+    setupLogoutButton();
     
     // Adicionar alguns veículos de exemplo se não houver nenhum
-    if (vehicleManager.vehicles.length === 0) {
+    if (localStorage.getItem('vehicles') === null) {
         const sampleVehicles = [
             {
-                id: vehicleManager.generateId(),
+                id: 'sample1',
                 placa: 'ABC1234',
                 modelo: 'Civic',
                 marca: 'Honda',
                 ano: 2022
             },
             {
-                id: vehicleManager.generateId(),
+                id: 'sample2',
                 placa: 'XYZ5678',
                 modelo: 'Corolla',
                 marca: 'Toyota',
                 ano: 2021
             },
             {
-                id: vehicleManager.generateId(),
+                id: 'sample3',
                 placa: 'DEF9012',
                 modelo: 'Golf',
                 marca: 'Volkswagen',
@@ -369,20 +524,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         ];
         
-        sampleVehicles.forEach(vehicle => {
-            vehicleManager.vehicles.push(vehicle);
-        });
-        
-        vehicleManager.saveVehicles();
-        vehicleManager.renderVehicles();
+        localStorage.setItem('vehicles', JSON.stringify(sampleVehicles));
     }
-});
-
-// Funções globais para uso nos botões HTML
-function editVehicle(id) {
-    vehicleManager.editVehicle(id);
-}
-
-function deleteVehicle(id) {
-    vehicleManager.showDeleteConfirmation(id);
-} 
+}); 
