@@ -109,6 +109,16 @@ class AuthSystem {
         if (!window.vehicleManager) {
             window.vehicleManager = new VehicleManager();
         }
+        
+        // Garantir que vehicleManager seja acessível globalmente
+        window.vehicleManager = window.vehicleManager;
+        
+        // Aguardar um pouco para garantir que o DOM esteja pronto
+        setTimeout(() => {
+            if (window.vehicleManager) {
+                window.vehicleManager.renderVehicles();
+            }
+        }, 100);
     }
 
     // Mostrar toast
@@ -138,7 +148,11 @@ class VehicleManager {
     init() {
         this.loadVehicles();
         this.bindEvents();
-        this.renderVehicles();
+        
+        // Aguardar um pouco para garantir que o DOM esteja pronto
+        setTimeout(() => {
+            this.renderVehicles();
+        }, 100);
     }
 
     // Carregar veículos do localStorage
@@ -185,7 +199,7 @@ class VehicleManager {
 
         // Modal de confirmação
         document.getElementById('confirm-yes').addEventListener('click', () => {
-            this.confirmDelete();
+            // O evento onclick será configurado dinamicamente em showDeleteConfirmation
         });
 
         document.getElementById('confirm-no').addEventListener('click', () => {
@@ -344,6 +358,12 @@ class VehicleManager {
             
             // Focar no primeiro campo
             document.getElementById('placa').focus();
+            
+            // Rolar para o formulário
+            document.getElementById('vehicle-form').scrollIntoView({ behavior: 'smooth' });
+            
+            // Mostrar toast de confirmação
+            this.showToast(`Editando veículo ${this.formatPlaca(vehicle.placa)}`, 'info');
         }
     }
 
@@ -357,12 +377,17 @@ class VehicleManager {
         document.getElementById('form-title').textContent = 'Cadastrar Novo Veículo';
         document.getElementById('submit-btn').textContent = 'Cadastrar';
         document.getElementById('cancel-btn').style.display = 'none';
+        
+        // Focar no primeiro campo
+        document.getElementById('placa').focus();
+        
+        // Mostrar toast de confirmação
+        this.showToast('Edição cancelada', 'info');
     }
 
     // Limpar formulário
     clearForm() {
         document.getElementById('vehicle-form').reset();
-        document.getElementById('edit-id').value = '';
     }
 
     // Buscar veículos
@@ -419,10 +444,10 @@ class VehicleManager {
                     <td>${vehicle.marca}</td>
                     <td>${vehicle.ano}</td>
                     <td class="actions">
-                        <button class="btn-edit" onclick="vehicleManager.editVehicle('${vehicle.id}')">
+                        <button class="btn-edit" onclick="window.vehicleManager.editVehicle('${vehicle.id}')">
                             ✏️ Editar
                         </button>
-                        <button class="btn-delete" onclick="vehicleManager.showDeleteConfirmation('${vehicle.id}', '${this.formatPlaca(vehicle.placa)}')">
+                        <button class="btn-delete" onclick="window.vehicleManager.showDeleteConfirmation('${vehicle.id}')">
                             🗑️ Excluir
                         </button>
                     </td>
@@ -432,22 +457,38 @@ class VehicleManager {
     }
 
     // Mostrar confirmação de exclusão
-    showDeleteConfirmation(id, placa) {
-        document.getElementById('confirm-message').textContent = 
-            `Tem certeza que deseja excluir o veículo com placa ${placa}?`;
-        document.getElementById('confirm-modal').style.display = 'block';
-        document.getElementById('confirm-yes').onclick = () => this.confirmDelete(id);
+    showDeleteConfirmation(id) {
+        const vehicle = this.vehicles.find(v => v.id === id);
+        if (vehicle) {
+            document.getElementById('confirm-message').textContent = 
+                `Tem certeza que deseja excluir o veículo com placa ${this.formatPlaca(vehicle.placa)}?`;
+            document.getElementById('confirm-modal').style.display = 'block';
+            
+            // Configurar evento de confirmação
+            const confirmYes = document.getElementById('confirm-yes');
+            confirmYes.onclick = () => {
+                this.confirmDelete(id);
+            };
+        }
     }
 
     // Confirmar exclusão
     confirmDelete(id) {
         this.deleteVehicle(id);
         this.hideModal();
+        
+        // Limpar evento onclick para evitar conflitos
+        const confirmYes = document.getElementById('confirm-yes');
+        confirmYes.onclick = null;
     }
 
     // Esconder modal
     hideModal() {
         document.getElementById('confirm-modal').style.display = 'none';
+        
+        // Limpar evento onclick para evitar conflitos
+        const confirmYes = document.getElementById('confirm-yes');
+        confirmYes.onclick = null;
     }
 
     // Mostrar toast
