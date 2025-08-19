@@ -197,6 +197,11 @@ class VehicleManager {
             }
         });
 
+        // Validação em tempo real da placa
+        document.getElementById('placa').addEventListener('input', (e) => {
+            this.validatePlacaRealTime(e.target);
+        });
+
         // Modal de confirmação
         document.getElementById('confirm-yes').addEventListener('click', () => {
             // O evento onclick será configurado dinamicamente em showDeleteConfirmation
@@ -216,14 +221,22 @@ class VehicleManager {
 
     // Validar placa (formato brasileiro: ABC-1234 ou ABC1234)
     validatePlaca(placa) {
-        const placaRegex = /^[A-Z]{3}[-]?[0-9]{4}$/;
-        return placaRegex.test(placa.toUpperCase());
+        // Padrão antigo: ABC-1234 ou ABC1234
+        const placaAntigaRegex = /^[A-Z]{3}[-]?[0-9]{4}$/;
+        
+        // Novo padrão Mercosul: ABC1D23 ou ABC-1D23
+        const placaMercosulRegex = /^[A-Z]{3}[-]?[0-9][A-Z][0-9]{2}$/;
+        
+        const placaUpper = placa.toUpperCase();
+        return placaAntigaRegex.test(placaUpper) || placaMercosulRegex.test(placaUpper);
     }
 
     // Verificar se placa já existe
     isPlacaDuplicate(placa, excludeId = null) {
+        // Normalizar a placa antes da comparação
+        const normalizedPlaca = this.normalizePlaca(placa);
         return this.vehicles.some(vehicle => 
-            vehicle.placa.toUpperCase() === placa.toUpperCase() && 
+            vehicle.placa.toUpperCase() === normalizedPlaca.toUpperCase() && 
             vehicle.id !== excludeId
         );
     }
@@ -234,12 +247,29 @@ class VehicleManager {
         return ano >= 1900 && ano <= currentYear + 1;
     }
 
+    // Detectar tipo de placa
+    detectPlacaType(placa) {
+        const placaUpper = placa.toUpperCase();
+        
+        // Padrão antigo: ABC-1234 ou ABC1234
+        if (/^[A-Z]{3}[-]?[0-9]{4}$/.test(placaUpper)) {
+            return 'antigo';
+        }
+        
+        // Novo padrão Mercosul: ABC1D23 ou ABC-1D23
+        if (/^[A-Z]{3}[-]?[0-9][A-Z][0-9]{2}$/.test(placaUpper)) {
+            return 'mercosul';
+        }
+        
+        return 'invalido';
+    }
+
     // Validar dados do veículo
     validateVehicle(vehicle) {
         const errors = [];
 
         if (!this.validatePlaca(vehicle.placa)) {
-            errors.push('Placa deve estar no formato ABC-1234 ou ABC1234');
+            errors.push('Placa deve estar no formato:\n• Padrão antigo: ABC-1234 ou ABC1234\n• Novo padrão Mercosul: ABC1D23 ou ABC-1D23');
         }
 
         if (this.isPlacaDuplicate(vehicle.placa, vehicle.id)) {
@@ -271,12 +301,27 @@ class VehicleManager {
         if (placa.includes('-')) {
             return placa;
         }
-        return placa.slice(0, 3) + '-' + placa.slice(3);
+        
+        // Para placas de 7 caracteres (ambos os padrões): ABC1234 -> ABC-1234, ABC1D23 -> ABC-1D23
+        if (placa.length === 7) {
+            return placa.slice(0, 3) + '-' + placa.slice(3);
+        }
+        
+        return placa;
     }
 
     // Normalizar placa para armazenamento
     normalizePlaca(placa) {
-        return placa.replace('-', '').toUpperCase();
+        // Remove hífen e converte para maiúsculo
+        const normalized = placa.replace('-', '').toUpperCase();
+        
+        // Valida se a placa está em um dos formatos aceitos
+        if (this.validatePlaca(normalized)) {
+            return normalized;
+        }
+        
+        // Se não validar, retorna a placa original sem hífen
+        return normalized;
     }
 
     // Manipular envio do formulário
@@ -311,7 +356,17 @@ class VehicleManager {
         this.saveVehicles();
         this.renderVehicles();
         this.clearForm();
-        this.showToast('Veículo cadastrado com sucesso!', 'success');
+        
+        const placaType = this.detectPlacaType(vehicle.placa);
+        let message = 'Veículo cadastrado com sucesso!';
+        
+        if (placaType === 'mercosul') {
+            message += ' (Placa no novo padrão Mercosul)';
+        } else if (placaType === 'antigo') {
+            message += ' (Placa no padrão antigo)';
+        }
+        
+        this.showToast(message, 'success');
     }
 
     // Atualizar veículo
@@ -322,7 +377,17 @@ class VehicleManager {
             this.saveVehicles();
             this.renderVehicles();
             this.cancelEdit();
-            this.showToast('Veículo atualizado com sucesso!', 'success');
+            
+            const placaType = this.detectPlacaType(vehicle.placa);
+            let message = 'Veículo atualizado com sucesso!';
+            
+            if (placaType === 'mercosul') {
+                message += ' (Placa no novo padrão Mercosul)';
+            } else if (placaType === 'antigo') {
+                message += ' (Placa no padrão antigo)';
+            }
+            
+            this.showToast(message, 'success');
         }
     }
 
@@ -491,6 +556,27 @@ class VehicleManager {
         confirmYes.onclick = null;
     }
 
+    // Validar placa em tempo real
+    validatePlacaRealTime(input) {
+        const placa = input.value.trim();
+        const placaType = this.detectPlacaType(placa);
+        
+        // Remover classes anteriores
+        input.classList.remove('valid-placa', 'invalid-placa', 'mercosul-placa');
+        
+        if (placa === '') {
+            return;
+        }
+        
+        if (placaType === 'invalido') {
+            input.classList.add('invalid-placa');
+        } else if (placaType === 'mercosul') {
+            input.classList.add('valid-placa', 'mercosul-placa');
+        } else {
+            input.classList.add('valid-placa');
+        }
+    }
+
     // Mostrar toast
     showToast(message, type = 'info') {
         const toast = document.getElementById('toast');
@@ -551,14 +637,14 @@ document.addEventListener('DOMContentLoaded', () => {
             },
             {
                 id: 'sample2',
-                placa: 'XYZ5678',
+                placa: 'XYZ1A23',
                 modelo: 'Corolla',
                 marca: 'Toyota',
                 ano: 2021
             },
             {
                 id: 'sample3',
-                placa: 'DEF9012',
+                placa: 'DEF9B12',
                 modelo: 'Golf',
                 marca: 'Volkswagen',
                 ano: 2023
