@@ -8,7 +8,7 @@ describe('Cadastro', () => {
       
       })
 
-    it('Login dados válidos deve permitir entrada no sistema', () => {
+    it('Cadastrar veiculo no sistema', () => {
 
       //Act
       cy.get('#placa').click().type('BKP3J27')
@@ -30,8 +30,21 @@ describe('Cadastro', () => {
       cy.get('#submit-btn').click()
 
       //Assert
-      cy.contains(':nth-child(4) > :nth-child(1) > strong', 'BKP-3J27')
-        .should('be.visible')
+      cy.contains(':nth-child(4) > :nth-child(1) > strong', 'BKP-3J27').should('be.visible')
     })
+
+     it('Deve editar veículo cadastrado', () => {
+      
+      cy.get('#search-input').type('BKP3J27')
+      cy.get('#search-btn').click()
+      cy.get('.btn-edit').click()
+      cy.get('#modelo').type('Camaro')
+      cy.get('#submit-btn').click()
+
+      //Assert
+      cy.contains('#vehicles-tbody > :nth-child(4) > :nth-child(2)', 'Camaro').should('be.visible')
+    })
+
+   
   
 })
