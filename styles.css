@@ -396,6 +396,16 @@ tr:hover {
     background: #c53030;
 }
 
+.read-only {
+    color: #718096;
+    font-style: italic;
+    font-size: 0.9rem;
+    padding: 8px 16px;
+    background: #f7fafc;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+}
+
 /* Estado sem veículos */
 .no-vehicles {
     text-align: center;
@@ -549,6 +559,12 @@ tr:hover {
     
     .btn-edit, .btn-delete {
         width: 100%;
+    }
+    
+    .read-only {
+        font-size: 0.8rem;
+        color: #666;
+        font-style: italic;
     }
     
     th, td {

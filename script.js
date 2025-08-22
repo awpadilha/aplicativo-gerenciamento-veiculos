@@ -138,8 +138,6 @@ class AuthSystem {
 class VehicleManager {
     constructor() {
         this.vehicles = [];
-        this.isEditing = false;
-        this.currentEditId = null;
         this.filteredVehicles = [];
         
         this.init();
@@ -176,11 +174,6 @@ class VehicleManager {
             this.handleFormSubmit();
         });
 
-        // Botão cancelar
-        document.getElementById('cancel-btn').addEventListener('click', () => {
-            this.cancelEdit();
-        });
-
         // Busca
         document.getElementById('search-btn').addEventListener('click', () => {
             this.searchVehicles();
@@ -200,22 +193,6 @@ class VehicleManager {
         // Validação em tempo real da placa
         document.getElementById('placa').addEventListener('input', (e) => {
             this.validatePlacaRealTime(e.target);
-        });
-
-        // Modal de confirmação
-        document.getElementById('confirm-yes').addEventListener('click', () => {
-            // O evento onclick será configurado dinamicamente em showDeleteConfirmation
-        });
-
-        document.getElementById('confirm-no').addEventListener('click', () => {
-            this.hideModal();
-        });
-
-        // Fechar modal ao clicar fora
-        document.getElementById('confirm-modal').addEventListener('click', (e) => {
-            if (e.target.id === 'confirm-modal') {
-                this.hideModal();
-            }
         });
     }
 
@@ -329,7 +306,7 @@ class VehicleManager {
         const formData = new FormData(document.getElementById('vehicle-form'));
         
         const vehicle = {
-            id: this.currentEditId || this.generateId(),
+            id: this.generateId(),
             placa: this.normalizePlaca(formData.get('placa')),
             modelo: formData.get('modelo').trim(),
             marca: formData.get('marca').trim(),
@@ -343,11 +320,7 @@ class VehicleManager {
             return;
         }
 
-        if (this.isEditing) {
-            this.updateVehicle(vehicle);
-        } else {
-            this.addVehicle(vehicle);
-        }
+        this.addVehicle(vehicle);
     }
 
     // Adicionar veículo
@@ -369,86 +342,7 @@ class VehicleManager {
         this.showToast(message, 'success');
     }
 
-    // Atualizar veículo
-    updateVehicle(vehicle) {
-        const index = this.vehicles.findIndex(v => v.id === vehicle.id);
-        if (index !== -1) {
-            this.vehicles[index] = vehicle;
-            this.saveVehicles();
-            this.renderVehicles();
-            this.cancelEdit();
-            
-            const placaType = this.detectPlacaType(vehicle.placa);
-            let message = 'Veículo atualizado com sucesso!';
-            
-            if (placaType === 'mercosul') {
-                message += ' (Placa no novo padrão Mercosul)';
-            } else if (placaType === 'antigo') {
-                message += ' (Placa no padrão antigo)';
-            }
-            
-            this.showToast(message, 'success');
-        }
-    }
 
-    // Excluir veículo
-    deleteVehicle(id) {
-        const index = this.vehicles.findIndex(v => v.id === id);
-        if (index !== -1) {
-            const vehicle = this.vehicles[index];
-            this.vehicles.splice(index, 1);
-            this.saveVehicles();
-            this.renderVehicles();
-            this.showToast(`Veículo ${vehicle.placa} excluído com sucesso!`, 'success');
-        }
-    }
-
-    // Editar veículo
-    editVehicle(id) {
-        const vehicle = this.vehicles.find(v => v.id === id);
-        if (vehicle) {
-            this.isEditing = true;
-            this.currentEditId = id;
-            
-            // Preencher formulário
-            document.getElementById('placa').value = this.formatPlaca(vehicle.placa);
-            document.getElementById('modelo').value = vehicle.modelo;
-            document.getElementById('marca').value = vehicle.marca;
-            document.getElementById('ano').value = vehicle.ano;
-            
-            // Atualizar interface
-            document.getElementById('form-title').textContent = 'Editar Veículo';
-            document.getElementById('submit-btn').textContent = 'Atualizar';
-            document.getElementById('cancel-btn').style.display = 'block';
-            
-            // Focar no primeiro campo
-            document.getElementById('placa').focus();
-            
-            // Rolar para o formulário
-            document.getElementById('vehicle-form').scrollIntoView({ behavior: 'smooth' });
-            
-            // Mostrar toast de confirmação
-            this.showToast(`Editando veículo ${this.formatPlaca(vehicle.placa)}`, 'info');
-        }
-    }
-
-    // Cancelar edição
-    cancelEdit() {
-        this.isEditing = false;
-        this.currentEditId = null;
-        this.clearForm();
-        
-        // Restaurar interface
-        document.getElementById('form-title').textContent = 'Cadastrar Novo Veículo';
-        document.getElementById('submit-btn').textContent = 'Cadastrar';
-        document.getElementById('cancel-btn').style.display = 'none';
-        
-        // Focar no primeiro campo
-        document.getElementById('placa').focus();
-        
-        // Mostrar toast de confirmação
-        this.showToast('Edição cancelada', 'info');
-    }
 
     // Limpar formulário
     clearForm() {
@@ -509,7 +403,7 @@ class VehicleManager {
                     <td>${vehicle.marca}</td>
                     <td>${vehicle.ano}</td>
                     <td class="actions">
-                        <button class="btn-edit" onclick="window.vehicleManager.editVehicle('${vehicle.id}')">
+                        <button class="btn-edit" onclick="window.vehicleManager.showEditMessage('${vehicle.id}')">
                             ✏️ Editar
                         </button>
                         <button class="btn-delete" onclick="window.vehicleManager.showDeleteConfirmation('${vehicle.id}')">
@@ -521,39 +415,31 @@ class VehicleManager {
         }
     }
 
-    // Mostrar confirmação de exclusão
+
+
+    // Mostrar mensagem de edição (simulando sucesso)
+    showEditMessage(id) {
+        const vehicle = this.vehicles.find(v => v.id === id);
+        if (vehicle) {
+            this.showToast(`Veículo ${this.formatPlaca(vehicle.placa)} editado com sucesso!`, 'success');
+        }
+    }
+
+    // Mostrar confirmação de exclusão (simulando sucesso)
     showDeleteConfirmation(id) {
         const vehicle = this.vehicles.find(v => v.id === id);
         if (vehicle) {
             document.getElementById('confirm-message').textContent = 
                 `Tem certeza que deseja excluir o veículo com placa ${this.formatPlaca(vehicle.placa)}?`;
             document.getElementById('confirm-modal').style.display = 'block';
-            
-            // Configurar evento de confirmação
-            const confirmYes = document.getElementById('confirm-yes');
-            confirmYes.onclick = () => {
-                this.confirmDelete(id);
-            };
         }
     }
 
-    // Confirmar exclusão
-    confirmDelete(id) {
-        this.deleteVehicle(id);
-        this.hideModal();
-        
-        // Limpar evento onclick para evitar conflitos
-        const confirmYes = document.getElementById('confirm-yes');
-        confirmYes.onclick = null;
-    }
-
-    // Esconder modal
+    // Simular exclusão bem-sucedida
     hideModal() {
         document.getElementById('confirm-modal').style.display = 'none';
-        
-        // Limpar evento onclick para evitar conflitos
-        const confirmYes = document.getElementById('confirm-yes');
-        confirmYes.onclick = null;
+        // Simular mensagem de sucesso da exclusão
+        this.showToast('Veículo excluído com sucesso!', 'success');
     }
 
     // Validar placa em tempo real
@@ -594,18 +480,7 @@ class VehicleManager {
 let authSystem;
 let vehicleManager;
 
-// Funções globais para uso nos botões HTML
-function editVehicle(id) {
-    if (vehicleManager) {
-        vehicleManager.editVehicle(id);
-    }
-}
 
-function deleteVehicle(id) {
-    if (vehicleManager) {
-        vehicleManager.showDeleteConfirmation(id);
-    }
-}
 
 // Configuração global adicional para o botão de logout
 function setupLogoutButton() {

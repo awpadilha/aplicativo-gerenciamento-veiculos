@@ -15,8 +15,6 @@ describe('Exclusao', () => {
       cy.get('.btn-delete').click()
       cy.get('#confirm-yes').click()
 
-     
-
       cy.get('#toast')
      //Assert
      cy.get('.toast').should('have.text', 'Veículo DEF9B12 excluído com sucesso!')

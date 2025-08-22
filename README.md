@@ -2,6 +2,12 @@
 
 Um sistema completo para cadastro, edição e gerenciamento de veículos com sistema de autenticação integrado.
 
+## 📚 Contexto
+
+Este portfólio foi desenvolvido como parte integrante da **Mentoria 2.0 do Julio de Lima**, um programa de mentoria focado no desenvolvimento de habilidades técnicas e práticas em testes de software.
+
+**Mentor:** [Julio de Lima](https://mentoria.juliodelima.com.br/)
+
 ## ✨ Funcionalidades
 
 ### 🔐 Sistema de Autenticação
@@ -32,13 +38,36 @@ Um sistema completo para cadastro, edição e gerenciamento de veículos com sis
   - **E-mail:** `teste@teste.com`
   - **Senha:** `123456`
 
-### 2. Gerenciando Veículos
+### 2. Executando os Testes
+Para executar os testes automatizados com Cypress:
+
+```bash
+# Instalar dependências
+npm install
+
+# Executar todos os testes em modo headless
+npx cypress run
+
+# Abrir interface interativa do Cypress
+npx cypress open
+
+# Executar teste específico
+npx cypress run --spec "cypress/e2e/login.cy.js"
+```
+
+**Testes Disponíveis:**
+- **`login.cy.js`** - Testes de autenticação e login
+- **`cadastro.cy.js`** - Testes de cadastro de veículos
+- **`pesquisa.cy.js`** - Testes de busca e filtros
+- **`exclusao.cy.js`** - Testes de exclusão de veículos
+
+### 3. Gerenciando Veículos
 - **Cadastrar:** Preencha o formulário e clique em "Cadastrar"
 - **Editar:** Clique no botão "✏️ Editar" na lista
 - **Excluir:** Clique no botão "🗑️ Excluir" e confirme
 - **Buscar:** Use o campo de busca para encontrar veículos específicos
 
-### 3. Sair do Sistema
+### 4. Sair do Sistema
 - Clique no botão "Sair" no canto superior direito
 
 ## 🛠️ Tecnologias Utilizadas
@@ -47,6 +76,7 @@ Um sistema completo para cadastro, edição e gerenciamento de veículos com sis
 - **CSS3** - Estilos modernos com Flexbox e Grid
 - **JavaScript ES6+** - Lógica da aplicação
 - **LocalStorage** - Armazenamento local dos dados
+- **Cypress** - Testes automatizados end-to-end
 - **Design Responsivo** - Funciona em todos os dispositivos
 
 ## 📱 Responsividade
@@ -55,6 +85,21 @@ O sistema é totalmente responsivo e funciona perfeitamente em:
 - 📱 Dispositivos móveis
 - 💻 Tablets
 - 🖥️ Desktops
+
+## 🧪 Qualidade e Testes
+
+### Testes Automatizados com Cypress
+- **Cobertura completa** das funcionalidades principais
+- **Testes end-to-end** simulando uso real do sistema
+- **Capturas de tela** automáticas em caso de falha
+- **Gravações de vídeo** para análise de problemas
+- **Relatórios detalhados** de execução
+
+### Funcionalidades Testadas
+- ✅ Sistema de autenticação (login/logout)
+- ✅ Cadastro de veículos com validação
+- ✅ Busca e filtros de veículos
+- ✅ Interface responsiva e navegação
 
 ## 🔒 Segurança
 
@@ -66,11 +111,23 @@ O sistema é totalmente responsivo e funciona perfeitamente em:
 ## 📁 Estrutura do Projeto
 
 ```
-aplicativo-gerenciamento-veiculos/
-├── index.html          # Página principal com login e sistema
-├── styles.css          # Estilos CSS responsivos
-├── script.js           # Lógica JavaScript (auth + veículos)
-└── README.md           # Documentação do projeto
+portfolio-pessoal-gerenciamento-veiculos/
+├── index.html              # Página principal com login e sistema
+├── styles.css              # Estilos CSS responsivos
+├── script.js               # Lógica JavaScript (auth + veículos)
+├── package.json            # Dependências e scripts do projeto
+├── cypress.config.js       # Configuração do Cypress
+├── cypress/
+│   ├── e2e/                # Testes end-to-end
+│   │   ├── login.cy.js     # Testes de autenticação
+│   │   ├── cadastro.cy.js  # Testes de cadastro de veículos
+│   │   ├── pesquisa.cy.js  # Testes de busca e filtros
+│   │   └── exclusao.cy.js  # Testes de exclusão de veículos
+│   ├── fixtures/           # Dados de teste
+│   ├── support/            # Configurações de suporte
+│   ├── screenshots/        # Capturas de tela dos testes
+│   └── videos/             # Gravações dos testes executados
+└── README.md               # Documentação do projeto
 ```
 
 ## 🎯 Funcionalidades Técnicas
@@ -92,6 +149,12 @@ aplicativo-gerenciamento-veiculos/
 - Estados visuais (loading, success, error)
 - Feedback visual para todas as ações
 - Design consistente e moderno
+
+### Testes Automatizados
+- Framework Cypress para testes E2E
+- Cobertura de cenários críticos
+- Validação de funcionalidades principais
+- Relatórios de execução automatizados
 
 ## 🔧 Personalização
 

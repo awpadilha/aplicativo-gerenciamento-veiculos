@@ -79,7 +79,6 @@
                 </div>
                 <div class="form-buttons">
                     <button type="submit" id="submit-btn">Cadastrar</button>
-                    <button type="button" id="cancel-btn" style="display: none;">Cancelar</button>
                 </div>
             </form>
         </section>
@@ -129,8 +128,8 @@
             <h3>Confirmar Exclusão</h3>
             <p id="confirm-message">Tem certeza que deseja excluir este veículo?</p>
             <div class="modal-buttons">
-                <button id="confirm-yes">Sim, Excluir</button>
-                <button id="confirm-no">Cancelar</button>
+                <button id="confirm-yes" onclick="window.vehicleManager.hideModal()">Sim, Excluir</button>
+                <button id="confirm-no" onclick="window.vehicleManager.hideModal()">Cancelar</button>
             </div>
         </div>
     </div>

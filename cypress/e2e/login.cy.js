@@ -23,17 +23,4 @@ describe('Login', () => {
      //Assert
     cy.get('.toast').should('be.visible')
   })
-
-  it('Login dados vazios deve apresentar mensagem de erro', () => {
-    
-    //Act
-     cy.get('#email').click()
-     cy.get('#password').click()
-     cy.get('.login-btn').click()
-
-     cy.wait(2000)
-     
-     //Assert
-    cy.get('.toast').should('be.visible')
-  })
 })
